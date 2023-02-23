@@ -51,8 +51,8 @@
                 </div>
             </div>
             <div class="grid">
-                <a href="#" role="button">login</a>
-                <a href="#" role="button" class="secondary">registrati</a>
+                <a href="login.php" role="button">login</a>
+                <a href="register.php" role="button" class="secondary">registrati</a>
             </div>
         </div>    
     </main>
