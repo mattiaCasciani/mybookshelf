@@ -1,17 +1,28 @@
 <?php
     session_start();
+    require_once "dbconnect.php";
+    if(isset($_SESSION['e-mail'])&& $_SESSION['e-mail'] !="") {
+        header("Location: dashboard.php");
+    }
     if (isset($_POST['login'])) {
-        $email = $_POST['email'];
+        $email = $_POST['e-mail'];
         $password = $_POST['password'];
         if(!filter_var($email,FILTER_VALIDATE_EMAIL)) {
-            $email_error = "Please Enter Valid Email ID";
+            $email_error = "usa una mail valida!!";
         }
         if(strlen($password) < 6) {
-            $password_error = "Password must be minimum of 6 characters";
+            $password_error = "la password deve avere almeno 6 caratteri!!!";
         }  
+        $result = mysqli_query($conn, "SELECT * FROM utente WHERE email='$email' AND password='$password'");
+        $row = mysqli_fetch_array($result);
+        if(!empty($row)){
+            $_SESSION['e-mail'] = $email;
+            header("Location: dashboard.php");
+        }else {
+            $error_message = "mail o password sbagliati !!!";
+        }
     }
-?>
-
+    ?>
 <!DOCTYPE html>
 <html data-theme="light">
     <head>
@@ -66,11 +77,11 @@
         </div>
         <div class="container">
             <h1 class="title">Login</h1>
-            <form action="dashboard.php" method="post"class="container__form">
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"class="container__form">
                 <div class="container__box">
                     <label for="E-mail">
                         E-mail
-                        <input type="text" id="e-mail" name="e-mail" placeholder="e-mail" required>
+                        <input type="email" id="e-mail" name="e-mail" placeholder="e-mail" required>
                         <span class="text-danger"><?php if (isset($email_error)) echo $email_error; ?></span>
                     </label>
                     
@@ -79,7 +90,8 @@
                         <input type="password" id="password" name="password" placeholder="password" required>
                         <span class="text-danger"><?php if (isset($password_error)) echo $password_error; ?></span>
                     </label>
-                    <button type="submit">Invia</button>
+                    <input type="submit" class="btn btn-primary" name="login" value="entra">
+
                 </div>
             </form>
         </div>
