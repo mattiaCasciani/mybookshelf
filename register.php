@@ -1,14 +1,26 @@
 <?php
-    session_start();
-    if (isset($_POST['login'])) {
-        $email = $_POST['email'];
+    require_once "dbconnect.php";
+    if (isset($_POST['registra'])) {
+        $email = $_POST['e-mail'];
         $password = $_POST['password'];
+        
         if(!filter_var($email,FILTER_VALIDATE_EMAIL)) {
-            $email_error = "Please Enter Valid Email ID";
+            $email_error = "usa una mail valida!!";
         }
         if(strlen($password) < 6) {
-            $password_error = "Password must be minimum of 6 characters";
-        }  
+            $password_error = "la password deve avere almeno 6 caratteri!!!";
+        }
+        $result = mysqli_query($conn, "SELECT * FROM utente WHERE email='$email' AND password='$password'");
+        $row = mysqli_fetch_array($result);
+        if(empty($row)){
+            if(mysqli_query($conn, "INSERT INTO utente(email, password) VALUES('" . $email  . "', '" . $password . "')")) {
+                header("location: login.php");
+                exit();
+            } else {
+                echo "Error:  : " . mysqli_error($conn);
+            }
+        }
+        mysqli_close($conn);
     }
 ?>
 
@@ -66,7 +78,7 @@
         </div>
         <div class="container">
             <h1 class="title">Registrati</h1>
-            <form action="index.php" method="post"class="container__form">
+            <form action="register.php" method="post"class="container__form">
                 <div class="container__box">
                     <label for="E-mail">
                         E-mail
@@ -79,7 +91,7 @@
                         <input type="password" id="password" name="password" placeholder="password" required>
                         <span class="text-danger"><?php if (isset($password_error)) echo $password_error; ?></span>
                     </label>
-                    <button type="submit">Invia</button>
+                    <button type="submit" name="registra">Invia</button>
                 </div>
             </form>
         </div>
