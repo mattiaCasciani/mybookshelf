@@ -38,6 +38,21 @@
             display: block;
             text-align:center;
         }
+
+        .github__container{
+            position:absolute;
+            right:10px;
+            bottom:10px;
+        }
+
+        .github__img{
+            height:50px;
+        }
+
+        .github__txt{
+            text-decoration:none;
+            color:black;
+        }
     </style>
 
 
@@ -45,7 +60,7 @@
     <main class="container">
         <div class="container__box">
             <div class="container__title">
-                <img src="bookshelf.png" href="https://minecraft.fandom.com/wiki/Bookshelf" class="bookshelf">
+                <a href="https://minecraft.fandom.com/wiki/Bookshelf"><img src="bookshelf.png" class="bookshelf"></a>
                 <div class="title__cont">
                     <h1 class="title">MyBookshelf</h1>
                 </div>
@@ -56,5 +71,9 @@
             </div>
         </div>    
     </main>
+    <div class="github__container">
+        <a href="https://github.com/mattiaCasciani/mybookshelf/"><img src="github.svg" class="github__img"></a>
+        <a href="https://github.com/mattiaCasciani/mybookshelf/" class="github__txt">guarda il nostro lavoro!</a>
+    </div>
 </body>
 </html>
