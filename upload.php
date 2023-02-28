@@ -16,6 +16,7 @@ if (isset($_POST['uploadBtn']) && $_POST['uploadBtn'] == 'Upload'){
       $dest_path = $uploadFileDir . $fileName;
       if(move_uploaded_file($fileTmpPath, $dest_path)) {
         $message ='File is successfully uploaded.';
+        $query=mysqli_query($conn, "INSERT INTO file(nome, estensione,idUtente) VALUES('" . $fileName  . "', '" . $fileExtension . "',(SELECT id FROM utente WHERE email='".$email."'))");
       }else {
         $message = 'There was some error moving the file to upload directory. Please make sure the upload directory is writable by web server.';
       }
