@@ -6,7 +6,7 @@
     }
     if (isset($_POST['login'])) {
         $email = $_POST['e-mail'];
-        $password = $_POST['password'];
+        $password = md5($_POST['password']);
         if(!filter_var($email,FILTER_VALIDATE_EMAIL)) {
             $email_error = "usa una mail valida!!";
         }
@@ -28,7 +28,8 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="css/pico.min.css"> 
-        <title></title>
+        <title>Accedi</title>
+    <link rel="icon" type="image/x-icon" href="bookshelf.png">
     </head>
     <body>
 
