@@ -2,6 +2,7 @@
     session_start();
     require_once "dbconnect.php";
     $email=$_SESSION['e-mail'];
+    $id=$_SESSION['id'];
     if(!isset($_SESSION['e-mail'])|| $_SESSION['e-mail'] =="") {
         header("Location: index.php");
     }
@@ -9,12 +10,8 @@
     if (!file_exists($path)) {
         mkdir($path, 0777, true);
         touch($path.'/.conf.txt');
-        $result = mysqli_query($conn, "SELECT id FROM utente WHERE email='$email'");
-        $row=mysqli_fetch_array($result);
-        $myfile = fopen($path."/.conf.txt", "w") or die("Unable to open file!");
-        fwrite($myfile,$row['id']."\n");
+        fwrite($myfile,$id."\n");
     }
-    $files = scandir($path);
 
 ?>
 
@@ -27,7 +24,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/pico.min.css"> 
-    <title>Document</title>
+    <title>Home</title>
+    <link rel="icon" type="image/x-icon" href="bookshelf.png">
 </head>
 <body>
 
@@ -103,7 +101,7 @@
         .uploadFile{
             position:absolute;
             right:160px;
-            max-width:100px;
+            max-width:120px;
             height:60px;
             top:0px;
             margin:10px;
@@ -124,31 +122,35 @@
         
         
     <div class="container__file">
-        <?php
-                    
-        $a=2;
-            while ($a < sizeof($files)) { ?>
+        <?php  
+            $result=mysqli_query($conn, "SELECT nome,estensione FROM file WHERE file.idUtente = '$id'");
+            $i=0;
+            $rows=array();
+            while($record = mysqli_fetch_array($result)){
+                $rows[]=$record;
+            }
+            $i=0;
+            while ($i < sizeof($rows)) { ?>
                 <div class="row">
                 <?php
-                for ($i=0; $i < 5; $i++) { 
+                for ($j=0; $j < 5; $j++) { 
                     
-                    if ($a < sizeof($files)) {
+                    if ($i < sizeof($rows)) {
                     ?>
                     
                         <div class="img__box">
-                            <a href="download.php?path=<?php echo 'cartelle/'.$email.'/'.$files[$a];?>"><img class="icon" src=<?php $tmp=substr($files[$a],(strlen($files[$a])-3));
-                                                        $tmp=strtoupper($tmp);
+                            <a href="download.php?path=<?php echo 'cartelle/'.$email.'/'.$rows[$i]['nome'];?>"><img class="icon" src=<?php 
                                                         $imgs = scandir("img/");
-                                                        if(in_array($tmp.".svg",$imgs))
-                                                            echo "img/".$tmp.".svg";
+                                                        if(in_array(strtoupper($rows[$i]['estensione']),$imgs))
+                                                            echo "img/".$rows[$i]['estensione'].".svg";
                                                         else
                                                             echo "img/DOC.svg";?>></a>
-                            <p><?php echo substr($files[$a],0);?></p>
+                            <p><?php echo $rows[$i]['nome'];?></p>
                         </div>
                     
                     <?php
                     }
-                    $a++;
+                    $i++;
                 }
                 echo "</div>";
                 echo "<br>";
