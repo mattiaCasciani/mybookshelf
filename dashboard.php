@@ -10,7 +10,7 @@
     if (!file_exists($path)) {
         mkdir($path, 0777, true);
         touch($path.'/.conf.txt');
-        fwrite($myfile,$id."\n");
+        fwrite($id."\n");
     }
 
 ?>
@@ -49,13 +49,6 @@
             font-size:40px;
             vertical-align: middle;
             transform: translateY(+15%);
-        }
-        .bar{
-            max-width:60%;
-            margin-top:10px;
-            position: absolute;
-            right:50%;
-            transform: translateX(+50%);
         }
 
         .file{
@@ -106,6 +99,18 @@
             top:0px;
             margin:10px;
         }
+        .search{
+            width:90px;
+            margin-left:5px;
+        }
+        .searchbar{
+            position:absolute;
+            top:10px;
+            width:50%;
+            display:inline-flex;
+            left:50%;
+            transform:translateX(-50%);
+        }
     </style>
 
 
@@ -113,7 +118,10 @@
     <div class="header">
         <a href="index.php"><img src="bookshelf.png" class="bookshelf"></a>
         <a href="index.php" style="text-decoration:none;"><h1 class="title__header">MyBookshelf</h1></a>
-        <input type="text" id="cerca" name="cerca" placeholder="cerca - funzionerà nei prossimi aggiornamenti" class="bar"> 
+        <form method="POST" action="search.php" class="searchbar">
+            <input type="text" id="cerca" name="cerca" placeholder="cerca - funzionerà nei prossimi aggiornamenti" class="bar" >
+            <button type="submit" name="searchBtn" value="Search" class="search" >cerca</button>
+        </form> 
         <form method="POST" action="upload.php" enctype="multipart/form-data">
             <label for="file-upload"><input type="file" id="file-upload" name="uploadedFile" class="uploadFile"></label>
             <button type="submit" name="uploadBtn" value="Upload" class="upload" >carica</button>
@@ -138,14 +146,16 @@
                     if ($i < sizeof($rows)) {
                     ?>
                     
-                        <div class="img__box">
+                        <div class="img__box" id="box__<?php echo $rows[$i]['nome'];?>">
                             <a href="download.php?path=<?php echo 'cartelle/'.$email.'/'.$rows[$i]['nome'];?>"><img class="icon" src=<?php 
                                                         $imgs = scandir("img/");
-                                                        if(in_array(strtoupper($rows[$i]['estensione']),$imgs))
-                                                            echo "img/".$rows[$i]['estensione'].".svg";
+                                                        if(in_array(strtoupper($rows[$i]['estensione']).".svg",$imgs)){
+                                                            $name=strtoupper($rows[$i]['estensione']);
+                                                            echo "img/".$name.".svg";
+                                                        }
                                                         else
                                                             echo "img/DOC.svg";?>></a>
-                            <p><?php echo $rows[$i]['nome'];?></p>
+                            <p id="<?php echo $rows[$i]['nome'];?>"><?php echo $rows[$i]['nome'];?></p>
                         </div>
                     
                     <?php
@@ -157,6 +167,7 @@
             }    
         ?>
     </div>
+    
     <script src="script.js"></script>
 </body>
 </html>
